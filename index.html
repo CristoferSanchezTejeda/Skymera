@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skymera</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css">
+    <style>
+     
+        body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+
+      
+      .modal {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); 
+        z-index: 1000;
+      }
+
+      .modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 600px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .modal-content h1 {
+        margin-bottom: 15px;
+        font-size: 24px;
+      }
+
+      .modal-content p {
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+
+      .modal-content a {
+        color: #ff9100;
+        text-decoration: none;
+      }
+
+      .close-btn {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #ff9100;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .close-btn:hover {
+        background-color: #ff9100;
+      }
+   
+        .modal {
+            display: none; 
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(255, 255, 255, 0.7);
+            justify-content: center;
+            align-items: center; 
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .close-button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+
+        .leaflet-control-zoom {
+            position: absolute;
+            top: 470px; 
+            left: 1354px; 
+            z-index: 900;
+            width: 0px;
+            height: 0px; 
+        }
+
+        #locationButton {
+            position: absolute;
+            top: 590px;
+            right: 120px;
+            z-index: 1000;
+            width: 70px;
+            height: 70px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        #locationButton img {
+            width: 28px;
+            height: 37px;
+        }
+
+   
+        .pillShape {
+            position: absolute;
+            top: 40px;
+            right: 30px; 
+            height: 650px; 
+            width: 60px; 
+            background-color: white;
+            border-radius: 35px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: black;
+            font-weight: bold;
+            z-index: 900; 
+            writing-mode: vertical-rl; 
+            text-orientation: mixed;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+  
+        .topPillShape {
+            position: absolute;
+            top: 25px; 
+            right: 1120px;
+            height: 55px; 
+            width: 350px; 
+            background-color: white;
+            border-radius: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: black;
+            font-weight: bold;
+            z-index: 900;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .buttonPillShape {
+            position: absolute;
+            top: 434px;
+            right: -996px; 
+            width: 60px; 
+            height: 100px; 
+            background-color: white;
+            border-radius: 35px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: black;
+            font-weight: bold;
+            z-index: 2000;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        
+        .menuPillShape {
+            position: absolute;
+            top: -1px; 
+            right: -212px; 
+            height: 55px; 
+            width: 190px;
+            background-color: white;
+            border-radius: 0px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: black;
+            font-weight: bold;
+            z-index: 900; 
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        
+        .leaflet-control-layers {
+            position: absolute;
+            top: 18px;
+            left: 435px; 
+            z-index: 1000; 
+            width: 100px; 
+            height: auto;
+        }
+
+        .leaflet-control-layers .leaflet-control-layers-base,
+        .leaflet-control-layers .leaflet-control-layers-overlays {
+            font-size: 14px; 
+        }
+
+        .leaflet-control-layers input[type="checkbox"] {
+            transform: scale(1.2);
+        }
+
+        
+        .leaflet-control-geocoder {
+            position: absolute;
+            top: 26px; 
+            right: 1130px;
+            z-index: 30000;
+            width: 310px; 
+            height: auto; 
+        
+        }
+
+        .leaflet-control-geocoder button {
+            height: 30px; 
+            width: 30px;
+            background-color: white;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+            border: none; 
+        }
+
+        .leaflet-control-geocoder button:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div id="map"></div>
+    <div id="locationButton">
+        <img src="123.png" alt="Location">
+    </div>
+    <div class="pillShape">
+       
+    </div>
+    <div class="topPillShape">
+
+        <div class="buttonPillShape">
+           
+        </div>
+        <div class="menuPillShape"></div>
+        
+    </div>
+    <div class="otherPillShape"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script>
+  
+        var map = L.map('map').setView([51.505, -0.09], 2);
+
+        var OpenStreetMap_Mapnik = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var Stadia_AlidadeSmoothDark = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.{ext}', {
+            minZoom: 0,
+            maxZoom: 20,
+            attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            ext: 'png'
+        });
+
+        var Stadia_AlidadeSatellite = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.{ext}', {
+            minZoom: 0,
+            maxZoom: 20,
+            attribution: '&copy; CNES, Distribution Airbus DS, © Airbus DS, © PlanetObserver (Contains Copernicus Data) | &copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            ext: 'jpg'
+        });
+
+       
+        var airQualityHeat = L.layerGroup(); 
+        var grossload = L.layerGroup();
+        var steamload = L.layerGroup();
+        var so2mass = L.layerGroup();
+        var co2mass = L.layerGroup();
+        var moxmass = L.layerGroup();
+        var heatinput = L.layerGroup();
+
+      
+        var baseMaps = {
+            "Street Map": OpenStreetMap_Mapnik,
+            "Dark Mode": Stadia_AlidadeSmoothDark,
+            "Satellite": Stadia_AlidadeSatellite
+        };
+
+        var overlays = {
+            "Heat Map": airQualityHeat, 
+            "Gross Load (MWH)": grossload,
+            "Steam Load (1000 Ib)": steamload, 
+            "SO2 Mass (Short Tons)": so2mass,
+            "CO2 Mass (Short Tons)": co2mass,
+            "Mox Mass (Short Tons)": moxmass,
+            "Heat Input (mmBTU)": heatinput
+        };
+
+       
+        var layerControl = L.control.layers(baseMaps, overlays, { position: 'topleft' }).addTo(map);
+
+       
+        L.control.zoom({
+            position: 'bottomright'
+        }).addTo(map);
+
+        var geocoder = L.Control.Geocoder.nominatim();
+        L.Control.geocoder({
+            geocoder: geocoder,
+            placeholder: 'Search for a location'
+        }).addTo(map);
+        
+        var marker, circle;
+
+        function centerMapOnUserLocation() {
+            console.log("Location button clicked");
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var lat = position.coords.latitude;
+                    var lon = position.coords.longitude;
+                    var accuracy = position.coords.accuracy;
+
+                    if (marker) {
+                        map.removeLayer(marker);
+                    }
+
+                    if (circle) {
+                        map.removeLayer(circle);
+                    }
+
+                    marker = L.marker([lat, lon]).addTo(map);
+                    circle = L.circle([lat, lon], { radius: accuracy }).addTo(map);
+
+                    var featureGroup = L.featureGroup([marker, circle]).addTo(map);
+                    map.fitBounds(featureGroup.getBounds());
+
+                    console.log("Your coordinate is: Lat: " + lat + " Long: " + lon + " Accuracy: " + accuracy);
+                }, function(error) {
+                    console.error("Geolocation error: ", error);
+                });
+            } else {
+                console.log("Your browser doesn't support geolocation feature!");
+            }
+        }
+
+        centerMapOnUserLocation();
+
+        document.getElementById('locationButton').addEventListener('click', function() {
+            centerMapOnUserLocation();
+        });
+
+var modal = document.getElementById("myModal");
+        var closeModal = document.querySelector(".modal-close");
+
+        function openModal() {
+            modal.style.display = "flex"; 
+        }
+
+        closeModal.onclick = function() {
+            modal.style.display = "none"; 
+        }
+
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = "none"; 
+            }
+        }
+
+        window.onload = openModal;
+        
+        
+    </script>
+<body>
+   
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <h1>Welcome to Skymera</h1>
+        <p>
+            My name is Cristofer Sanchez Tejeda, and Skymera is a platform that provides historical data on air quality, offering users a unique view of their surroundings. Currently, the platform features a limited selection of data points and features, but many more datasets and functionalities will be added soon!
+        </p>
+        <p>
+          As this is a one-person project, and I’m 16 with a life outside of my computer, updates may take some time. You may encounter occasional glitches, but rest assured they will be addressed as the project evolves. If you come across any problems, please <a href="https://forms.gle/zarxjSAUkQQcQWBw7" target="_blank">click here to report them</a> using this Google form. Your patience and support are greatly appreciated, and I’m excited to continue developing Skymera with new and valuable features in the future!
+         </p>
+          Feel free to connect with me on <a href="https://www.linkedin.com/in/cristofer-sanchez-tejeda-209766312/" target="_blank">LinkedIn</a> or reach out via email at <a href="mailto:sancheztejeda141@gmail.com">sancheztejeda141@gmail.com</a>.
+        </p>
+        (This is the early stage of Skymera. While I’m focusing on other projects, the features are functional, though there aren’t any datasets yet. I plan to add much more soon.)
+    </p>
+        <button class="close-btn" onclick="closeModal()">Got it!</button>
+      </div>
+    </div>
+
+</body>
+<script>
+
+    window.onload = function() {
+        document.getElementById('myModal').style.display = 'flex'; 
+    };
+
+    function closeModal() {
+        document.getElementById('myModal').style.display = 'none';
+    }
+</script>
+
+</script>
+
+</html>
