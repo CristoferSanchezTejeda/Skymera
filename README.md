@@ -22,7 +22,7 @@ https://forms.gle/P8AuwbihvxSnhHbF6
 
 Contact Information
 
-Email: sancheztejeda141@gmail.com
+Email: sancheztejedacristofer@gmail.com
 
 Linkedin:  https://www.linkedin.com/in/cristofer-sanchez-tejeda-209766312
 
