@@ -24,5 +24,4 @@ Contact Information
 
 Email: sancheztejedacristofer@gmail.com
 
-Linkedin:  https://www.linkedin.com/in/cristofer-sanchez-tejeda-209766312
 
